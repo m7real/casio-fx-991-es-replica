@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CASIO fx-991ES PLUS</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { height: 100%; }
+
+  body {
+    background: radial-gradient(circle at 50% 20%, #23262e 0%, #101218 70%, #08090c 100%);
+    color: #ddd;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 12px;
+    min-height: 100%;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------------- device shell ---------------- */
+  #device {
+    width: 396px;
+    padding: 14px 14px 10px;
+    border-radius: 12px 12px 26px 26px;
+    background:
+      linear-gradient(180deg, #fdfdfe 0%, #eceef1 8%, #dcdfe4 45%, #cfd3da 80%, #c4c8d0 100%);
+    box-shadow:
+      0 2px 0 rgba(255,255,255,.9) inset,
+      0 -3px 6px rgba(0,0,0,.18) inset,
+      0 26px 50px rgba(0,0,0,.65),
+      0 4px 10px rgba(0,0,0,.5);
+    user-select: none;
+  }
+
+  /* ---------------- header ---------------- */
+  #brandbar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 0 2px 8px;
+  }
+  #brandbar .left { line-height: 1; }
+  #brand-casio {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 21px;
+    letter-spacing: 1px;
+    color: #12307e;
+  }
+  #brand-model {
+    font-size: 13px;
+    font-weight: 700;
+    color: #2b2f36;
+    margin-top: 3px;
+  }
+  #brand-model .plus { color: #12307e; font-size: 10px; vertical-align: super; }
+  #brandbar .right { text-align: right; }
+  #solar {
+    display: flex;
+    gap: 2px;
+    justify-content: flex-end;
+    margin-bottom: 3px;
+  }
+  #solar i {
+    display: block;
+    width: 15px;
+    height: 22px;
+    border-radius: 1px;
+    background: linear-gradient(180deg, #b79a55 0%, #7d6430 45%, #d8c07c 55%, #6f5827 100%);
+    border: 1px solid #5a4a20;
+  }
+  #tagline {
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: .4px;
+    color: #4a5568;
+  }
+  #tagline b { color: #12307e; }
+
+  /* ---------------- LCD ---------------- */
+  #lcd {
+    position: relative;
+    background: linear-gradient(180deg, #93ad7c 0%, #8aa573 55%, #7f9b68 100%);
+    border-radius: 3px;
+    padding: 5px 8px 6px;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.5),
+      0 2px 5px rgba(0,0,0,.35) inset;
+    font-family: "Consolas", "Courier New", monospace;
+    color: #16210f;
+    overflow: hidden;
+  }
+  #indicators {
+    display: flex;
+    gap: 7px;
+    height: 13px;
+    font-size: 9.5px;
+    line-height: 1;
+    color: #26331b;
+    align-items: center;
+  }
+  #indicators .sp { flex: 1; }
+  #indicators span { opacity: 0; }
+  #indicators span.on { opacity: 1; }
+  #indicators .inv {
+    background: #26331b;
+    color: #93ad7c;
+    padding: 1px 3px;
+    border-radius: 2px;
+  }
+  #indicators .inv.on { background: #26331b; color: #93ad7c; }
+  #indicators .g { color: #3d2f7a; }
+
+  #lcd-body {
+    position: relative;
+    height: 118px;
+  }
+  #line1, #line2 {
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: right;
+    font-size: 19px;
+    line-height: 1.15;
+    padding: 0 2px;
+    word-break: break-all;
+    overflow-wrap: anywhere;
+  }
+  #line1 { top: 2px; }
+  #line2 { bottom: 2px; font-size: 21px; }
+  #line2 .err { letter-spacing: 1px; }
+  #lcd.off #lcd-body { visibility: hidden; }
+  #lcd.off #indicators { opacity: .18; }
+
+  /* blinking block caret */
+  #line1 .caret {
+    display: inline-block;
+    width: 0;
+    border-left: 2px solid #16210f;
+    height: 1.05em;
+    vertical-align: -0.16em;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0; } }
+
+  /* natural-display pieces */
+  #lcd sup, #lcd sub { font-size: .62em; line-height: 0; }
+  #lcd sup { vertical-align: super; }
+  #lcd sub { vertical-align: sub; }
+  .frac {
+    display: inline-flex;
+    flex-direction: column;
+    vertical-align: middle;
+    text-align: center;
+    margin: 0 .18em;
+    line-height: 1.05;
+  }
+  .frac > .n { border-bottom: 1.4px solid currentColor; padding: 0 .25em; }
+  .frac > .d { padding: 0 .25em; }
+  .root { display: inline-block; white-space: nowrap; }
+  .root .ovl {
+    border-top: 1.4px solid currentColor;
+    padding: 0 .12em 0 0;
+    margin-left: -.06em;
+  }
+  .root .ix { font-size: .6em; vertical-align: super; margin-right: .04em; }
+  .root .rad { font-size: 1.02em; }
+  .integrand { border-top: 1.4px solid currentColor; padding: 0 .18em 0 0; }
+  .degmark { font-size: .78em; vertical-align: super; }
+
+  /* menu overlay */
+  #menu {
+    position: absolute;
+    inset: 20px 4px 4px;
+    background: #8ba473;
+    border-radius: 2px;
+    padding: 3px 6px;
+    font-size: 15px;
+    line-height: 1.42;
+    display: none;
+  }
+  #menu.on { display: block; }
+  #menu .mi { white-space: nowrap; }
+  #menu .mi u { text-decoration: none; font-weight: 700; }
+  #menu .sel { background: #26331b; color: #8ba473; }
+
+  /* ---------------- keypad ---------------- */
+  .pad { display: grid; gap: 7px; }
+  #pad1 { grid-template-columns: repeat(6, 1fr); margin-top: 11px; }
+  #pad2 { grid-template-columns: repeat(5, 1fr); margin-top: 9px; }
+
+  .key {
+    position: relative;
+    border: 0;
+    padding: 0;
+    height: 43px;
+    border-radius: 4px 4px 9px 9px;
+    background: linear-gradient(180deg, #2a3040 0%, #1b2029 55%, #151920 100%);
+    color: #f2f4f8;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow:
+      0 2px 0 #0c0e13,
+      0 3px 4px rgba(0,0,0,.35),
+      0 1px 0 rgba(255,255,255,.13) inset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .key:active { transform: translateY(2px); box-shadow: 0 0 0 #0c0e13, 0 1px 2px rgba(0,0,0,.4); }
+  .key:focus-visible { outline: 2px solid #6fa8ff; outline-offset: 1px; }
+  .key .lab {
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    right: 3px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: -.2px;
+    pointer-events: none;
+  }
+  .key .lab .s { color: #cfa233; }
+  .key .lab .a { color: #cf3b3b; }
+  .key .lab .a.p { color: #7b3fbf; }
+  .key .ml { padding-top: 6px; white-space: nowrap; }
+  .key .ml sup { font-size: .62em; }
+
+  .key.blue { background: linear-gradient(180deg, #3a4a72 0%, #26324f 55%, #1c2539 100%); }
+  .key.blue:active { box-shadow: 0 0 0 #0c0e13; }
+  .key.orange { background: linear-gradient(180deg, #f07530 0%, #dd5a17 55%, #c2480f 100%); color: #17181b; }
+  .key.exe { background: linear-gradient(180deg, #35578c 0%, #24406a 55%, #1a3050 100%); }
+  .key.wide { grid-column: span 2; }
+  .key.num { font-size: 17px; }
+  .key.on-shift { box-shadow: 0 0 0 2px #cfa233, 0 2px 0 #0c0e13; }
+  .key.on-alpha { box-shadow: 0 0 0 2px #cf3b3b, 0 2px 0 #0c0e13; }
+
+  /* REPLAY pad */
+  #replay {
+    grid-column: 3 / 5;
+    grid-row: 1 / 3;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 30%, #4b5568 0%, #2b3242 55%, #1d2330 100%);
+    position: relative;
+    box-shadow: 0 2px 0 #0c0e13, 0 3px 6px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.18) inset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #replay .cap {
+    width: 44%;
+    padding-top: 6px;
+    text-align: center;
+    font-size: 7.5px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    color: #cfd6e4;
+    text-shadow: 0 1px 1px rgba(0,0,0,.6);
+  }
+  #replay .rp {
+    position: absolute;
+    border: 0;
+    background: transparent;
+    color: #e6ebf5;
+    font-size: 11px;
+    line-height: 1;
+    padding: 2px 4px;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+  #replay .rp:active { background: rgba(255,255,255,.14); }
+  #replay .up { top: 5px; left: 50%; transform: translateX(-50%); }
+  #replay .dn { bottom: 5px; left: 50%; transform: translateX(-50%); }
+  #replay .lf { left: 5px; top: 50%; transform: translateY(-50%); }
+  #replay .rt { right: 5px; top: 50%; transform: translateY(-50%); }
+
+  /* footer */
+  #footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 3px 2px;
+    font-size: 7.5px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    color: #6b7280;
+  }
+  #footer .nat { color: #12307e; }
+
+  /* toast */
+  #toast {
+    position: fixed;
+    left: 50%;
+    bottom: 26px;
+    transform: translateX(-50%) translateY(14px);
+    background: rgba(12,14,20,.94);
+    border: 1px solid #2c3140;
+    color: #dfe4ef;
+    font-size: 12px;
+    padding: 8px 14px;
+    border-radius: 18px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .18s ease, transform .18s ease;
+    max-width: 78vw;
+    text-align: center;
+  }
+  #toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 420px) {
+    #device { width: 100%; max-width: 396px; }
+  }
+</style>
+</head>
+<body>
+  <div id="device">
+    <div id="brandbar">
+      <div class="left">
+        <div id="brand-casio">CASIO</div>
+        <div id="brand-model">fx-991ES<span class="plus">PLUS</span></div>
+      </div>
+      <div class="right">
+        <div id="solar"><i></i><i></i><i></i><i></i></div>
+        <div id="tagline">NATURAL-V.P.A.M. <b>2nd edition</b></div>
+      </div>
+    </div>
+
+    <div id="lcd">
+      <div id="indicators">
+        <span id="i-S">S</span>
+        <span id="i-A">A</span>
+        <span id="i-STO">STO</span>
+        <span id="i-RCL">RCL</span>
+        <span id="i-M">M</span>
+        <span class="sp"></span>
+        <span id="i-D">D</span>
+        <span id="i-R">R</span>
+        <span id="i-G">G</span>
+        <span id="i-Math">Math</span>
+        <span id="i-Lin">Lin</span>
+        <span id="i-Fix">Fix</span>
+        <span id="i-Sci">Sci</span>
+        <span id="i-Norm">Norm</span>
+        <span class="sp"></span>
+        <span id="i-up">&#9650;</span>
+        <span id="i-dn">&#9660;</span>
+      </div>
+      <div id="lcd-body">
+        <div id="line1"></div>
+        <div id="line2"></div>
+        <div id="menu"></div>
+      </div>
+    </div>
+
+    <div class="pad" id="pad1"></div>
+    <div class="pad" id="pad2"></div>
+
+    <div id="footer">
+      <span class="nat">NATURAL DISPLAY</span>
+      <span>TWO WAY POWER</span>
+      <span>10 + 2 digits</span>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
