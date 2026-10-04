@@ -327,7 +327,16 @@
     s = tSqrt(s);
     s = tEquation(s, ctx);
     s = tSugar(s);              /* ² -> ^2, ³ -> ^3 */
-    s = tSci(s);                /* 2e3 -> 2000, 1.5E-3 -> 0.0015 */
+    s = tSci(s);                /* 2e3 -> 2000, 1.5E-3 -> (0.0015) */
+    /* strip leading zeros so JS accepts casio-style 0236 */
+    s = s.replace(/\d+(?:\.\d+)?/g, function (tok) {
+      var dot = tok.indexOf('.');
+      var intPart = dot >= 0 ? tok.slice(0, dot) : tok;
+      var fracPart = dot >= 0 ? tok.slice(dot) : '';
+      intPart = intPart.replace(/^0+(?=\d)/, '');
+      if (intPart === '') intPart = '0';
+      return intPart + fracPart;
+    });
     s = tVars(s, vars, ctx);
     s = tFractions(s);
     s = tImplicitMult(s);
@@ -557,7 +566,8 @@ var args = splitTop(s.slice(open + 1, close), ',');
   /* scientific notation: 2e3 / 2E3 / 1.5e-3 -> plain literal */
   function tSci(s) {
     return s.replace(/(\d+(?:\.\d+)?)[eE]([+-]?\d+)/g, function (m, a, b) {
-      return numLit(Number(a + 'e' + b));
+      var n = Number(a + 'e' + b);
+      return n.toFixed(18).replace(/0+$/, '').replace(/\.$/, '');
     });
   }
 
