@@ -1974,9 +1974,14 @@ var args = splitTop(s.slice(open + 1, close), ',');
       return;
     }
 
-    /* power keys */
-    if (kid === 'on') { S.power = true; render(); return; }
-    if (kid === 'off') { S.power = false; S.expr = ''; S.cur = 0; render(); return; }
+    /* resolve shift/alpha before anything else so SHIFT+AC -> 'off' works */
+    var action = kid;
+    if (shift && SHIFT_ACTIONS[kid]) action = SHIFT_ACTIONS[kid];
+    else if (alpha && ALPHA_ACTIONS[kid]) action = ALPHA_ACTIONS[kid];
+
+    /* power keys (kid may itself be 'on'/'off' or a SHIFT/ALPHA action) */
+    if (action === 'on') { S.power = true; render(); return; }
+    if (action === 'off') { S.power = false; S.expr = ''; S.cur = 0; render(); return; }
 
     /* menus & prompts take priority */
     if (S.menu) { handleMenuKey(kid); render(); return; }
@@ -1986,11 +1991,6 @@ var args = splitTop(s.slice(open + 1, close), ',');
       if (kid === 'exe') { S.solveFail = false; S.calcCtx = null; render(); return; }
       render(); return;
     }
-
-    /* shift/alpha resolution */
-    var action = kid;
-    if (shift && SHIFT_ACTIONS[kid]) action = SHIFT_ACTIONS[kid];
-    else if (alpha && ALPHA_ACTIONS[kid]) action = ALPHA_ACTIONS[kid];
 
     /* replay / cursor / history */
     switch (action) {
