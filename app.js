@@ -2129,6 +2129,10 @@ var args = splitTop(s.slice(open + 1, close), ',');
       if (n) n.classList.toggle('on', !!ind[id]);
     }
     if (lcd) lcd.classList.toggle('off', !S.power);
+    var sb = document.querySelector('[data-k="shift"]');
+    if (sb) sb.classList.toggle('on-shift', !!S.shift);
+    var ab = document.querySelector('[data-k="alpha"]');
+    if (ab) ab.classList.toggle('on-alpha', !!S.alpha);
 
     /* expression line */
     if (S.menu) {
